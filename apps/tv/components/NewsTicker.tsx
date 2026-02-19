@@ -87,16 +87,14 @@ export default function NewsTicker() {
 const styles = StyleSheet.create({
     container: {
         height: Layout.tickerHeight,
-        backgroundColor: Colors.surface,
-        borderTopWidth: 1,
-        borderTopColor: Colors.accent,
+        backgroundColor: '#1A233A', // White to match bottom bar
         justifyContent: 'center',
         overflow: 'hidden',
     },
     text: {
         position: 'absolute',
-        color: Colors.textPrimary,
-        fontSize: 20,
-        fontFamily: FontFamily.inter,
+        color: '#FFFFFF', // Dark text
+        fontSize: 32, // Increased from 22
+        fontFamily: FontFamily.montserrat,
     },
 });

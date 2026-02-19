@@ -22,7 +22,7 @@ import {
 // Types
 // ─────────────────────────────────────────────────────────────
 
-export type PrayerName = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
+export type PrayerName = 'imsak' | 'fajr' | 'sunrise' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
 export type DisplayState = 'IDLE' | 'APPROACHING' | 'ADZAN' | 'IQOMAH' | 'PRAYER';
 
 export interface PrayerEntry {
@@ -50,14 +50,16 @@ export interface PrayerEngineState {
 }
 
 const PRAYER_META: Record<PrayerName, { label: string; labelAr: string }> = {
-  fajr:    { label: 'Fajr',    labelAr: 'الفجر'   },
-  dhuhr:   { label: 'Dhuhr',   labelAr: 'الظهر'   },
-  asr:     { label: 'Asr',     labelAr: 'العصر'   },
+  imsak:   { label: 'Imsak',   labelAr: 'إمساك'   },
+  fajr:    { label: 'Shubuh',  labelAr: 'الفجر'   },
+  sunrise: { label: 'Syuruq',  labelAr: 'الشروق'  },
+  dhuhr:   { label: 'Dzuhur',  labelAr: 'الظهر'   },
+  asr:     { label: 'Ashar',   labelAr: 'العصر'   },
   maghrib: { label: 'Maghrib', labelAr: 'المغرب'  },
-  isha:    { label: 'Isha',    labelAr: 'العشاء'  },
+  isha:    { label: "Isya'",   labelAr: 'العشاء'  },
 };
 
-const PRAYER_ORDER: PrayerName[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+const PRAYER_ORDER: PrayerName[] = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
 // How long the adzan phase lasts (ms) before IQOMAH starts
 const ADZAN_DURATION_MS = 5 * 60 * 1000;
@@ -96,12 +98,22 @@ export function getPrayerEntries(
   const params = getParams(method);
   const pt = new PrayerTimes(coords, date, params);
 
-  return PRAYER_ORDER.map((name) => ({
-    name,
-    label:   PRAYER_META[name].label,
-    labelAr: PRAYER_META[name].labelAr,
-    time:    pt[name] as Date,
-  }));
+  return PRAYER_ORDER.map((name) => {
+    let time: Date;
+    if (name === 'imsak') {
+      // Imsak is 10 minutes before Fajr
+      time = new Date(pt.fajr.getTime() - 10 * 60 * 1000);
+    } else {
+      time = pt[name] as Date;
+    }
+
+    return {
+      name,
+      label:   PRAYER_META[name].label,
+      labelAr: PRAYER_META[name].labelAr,
+      time,
+    };
+  });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -212,7 +224,7 @@ export class PrayerEngine {
 
   private nextPhase(current: PhaseInfo, delays: IqomahDelays): PhaseInfo | null {
     if (current.phase === 'ADZAN') {
-      const delayMs = delays[current.prayer] * 60 * 1000;
+      const delayMs = delays[current.prayer as keyof IqomahDelays] * 60 * 1000;
       return {
         prayer: current.prayer,
         phase: 'IQOMAH',

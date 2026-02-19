@@ -19,6 +19,12 @@ export const Colors = {
   success: '#059669',
   warning: '#D97706',
   danger: '#DC2626',
+
+  // Full Screen UI Tokens
+  nextPrayerHighlight: '#F59E0B', // Amber 500
+  barBackground: 'rgba(15, 23, 42, 0.65)',
+  glassBackground: 'rgba(255, 255, 255, 0.15)',
+  clockBackground: 'rgba(248, 250, 252, 0.85)',
 } as const;
 
 export const FontSize = {
@@ -36,6 +42,12 @@ export const FontFamily = {
   interBold: 'Inter-Bold',
   amiri: 'Amiri',
   amiriBold: 'Amiri-Bold',
+  googleSans: 'GoogleSans-Regular',
+  googleSansBold: 'GoogleSans-Bold',
+  montserrat: 'Montserrat-Regular',
+  montserratMedium: 'Montserrat-Medium',
+  montserratBold: 'Montserrat-Bold',
+  montserratSemiBold: 'Montserrat-SemiBold',
 } as const;
 
 export const Spacing = {
@@ -51,5 +63,9 @@ export const Spacing = {
 export const Layout = {
   sidebarWidth: '25%',   // Zone A — Prayer sidebar
   mediaStageWidth: '75%', // Zone B — Media carousel
-  tickerHeight: 60,       // Zone C — News ticker (px)
+  tickerHeight: 80,       // Zone C — News ticker (px)
+  
+  // Full Screen UI
+  topBarHeight: 120,
+  bottomBarHeight: 180,
 } as const;

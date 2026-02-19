@@ -29,7 +29,7 @@ export default function RootLayout() {
     useEffect(() => {
         if (!isLoading && fontsLoaded) {
             if (isConfigured) {
-                router.replace('/display');
+                router.replace('/full-display');
             } else {
                 router.replace('/pairing');
             }

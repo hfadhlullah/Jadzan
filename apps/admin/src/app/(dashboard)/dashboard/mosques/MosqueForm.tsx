@@ -40,10 +40,13 @@ export default function MosqueForm({ mosque }: MosqueFormProps) {
 
         const input: UpsertMosqueInput = {
             name: data.get("name") as string,
+            address: data.get("address") as string,
             latitude: parseFloat(data.get("latitude") as string),
             longitude: parseFloat(data.get("longitude") as string),
             timezone: data.get("timezone") as string,
             calculation_method: data.get("calculation_method") as UpsertMosqueInput["calculation_method"],
+            background_url: data.get("background_url") as string,
+            arabesque_opacity: parseFloat(data.get("arabesque_opacity") as string),
             iqomah_delays: {
                 fajr: parseInt(data.get("iqomah_fajr") as string, 10),
                 dhuhr: parseInt(data.get("iqomah_dhuhr") as string, 10),
@@ -104,6 +107,32 @@ export default function MosqueForm({ mosque }: MosqueFormProps) {
                             <option key={m.value} value={m.value}>{m.label}</option>
                         ))}
                     </select>
+                </Field>
+
+                <Field label="Address" htmlFor="address">
+                    <Input id="address" name="address" required
+                        placeholder="Jl. Raya No. 1..." defaultValue={mosque?.address ?? ""}
+                        className={inputClass} />
+                </Field>
+            </section>
+
+            {/* ── Visual Settings ────────────────────────────── */}
+            <section className="rounded-xl border p-6 space-y-5"
+                style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}>
+                <h2 className="text-base font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                    Theme & Background
+                </h2>
+
+                <Field label="Background Image URL" htmlFor="background_url">
+                    <Input id="background_url" name="background_url"
+                        placeholder="https://images.unsplash.com/..." defaultValue={mosque?.background_url ?? ""}
+                        className={inputClass} />
+                </Field>
+
+                <Field label="Arabesque Opacity (0.0 - 1.0)" htmlFor="arabesque_opacity">
+                    <Input id="arabesque_opacity" name="arabesque_opacity" type="number" step="0.01" min="0" max="1"
+                        defaultValue={mosque?.arabesque_opacity ?? 0.05}
+                        className={inputClass} />
                 </Field>
             </section>
 

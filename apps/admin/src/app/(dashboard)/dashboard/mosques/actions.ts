@@ -19,11 +19,14 @@ const IqomahDelaysSchema = z.object({
 
 const UpsertMosqueSchema = z.object({
   name:               z.string().min(1, "Name is required"),
+  address:            z.string().optional().nullable(),
   latitude:           z.number().min(-90).max(90),
   longitude:          z.number().min(-180).max(180),
   timezone:           z.string().min(1, "Timezone is required"),
   calculation_method: z.string().min(1),
   iqomah_delays:      IqomahDelaysSchema,
+  background_url:     z.string().url("Invalid background URL").or(z.literal("")).optional().nullable(),
+  arabesque_opacity:  z.number().min(0).max(1).optional().nullable(),
 });
 
 export type IqomahDelays = z.infer<typeof IqomahDelaysSchema>;
@@ -83,11 +86,14 @@ export async function upsertMosque(
   if (existing) {
     const updatePayload: TablesUpdate<"mosques"> = {
       name:               parsed.data.name,
+      address:            parsed.data.address,
       latitude:           parsed.data.latitude,
       longitude:          parsed.data.longitude,
       timezone:           parsed.data.timezone,
       calculation_method: parsed.data.calculation_method,
       iqomah_delays:      parsed.data.iqomah_delays,
+      background_url:     parsed.data.background_url,
+      arabesque_opacity:  parsed.data.arabesque_opacity,
     };
     const { error } = await supabase
       .from("mosques")
@@ -98,11 +104,14 @@ export async function upsertMosque(
     const insertPayload: TablesInsert<"mosques"> = {
       user_id:            user.id,
       name:               parsed.data.name,
+      address:            parsed.data.address,
       latitude:           parsed.data.latitude,
       longitude:          parsed.data.longitude,
       timezone:           parsed.data.timezone,
       calculation_method: parsed.data.calculation_method,
       iqomah_delays:      parsed.data.iqomah_delays,
+      background_url:     parsed.data.background_url,
+      arabesque_opacity:  parsed.data.arabesque_opacity,
     };
     const { error } = await supabase
       .from("mosques")

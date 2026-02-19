@@ -120,6 +120,9 @@ export type Database = {
       }
       mosques: {
         Row: {
+          address: string | null
+          arabesque_opacity: number | null
+          background_url: string | null
           calculation_method: string
           created_at: string
           id: string
@@ -132,6 +135,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address?: string | null
+          arabesque_opacity?: number | null
+          background_url?: string | null
           calculation_method?: string
           created_at?: string
           id?: string
@@ -144,6 +150,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address?: string | null
+          arabesque_opacity?: number | null
+          background_url?: string | null
           calculation_method?: string
           created_at?: string
           id?: string
