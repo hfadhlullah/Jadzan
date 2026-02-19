@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     glassFooter: {
         width: '95%',
-        height: 160,
+        height: 200, // Increased from 160 to fit larger fonts + countdown
         backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glass white
         flexDirection: 'row',
         borderRadius: 40,
@@ -159,29 +159,29 @@ const styles = StyleSheet.create({
         elevation: 20,
     },
     prayerLabel: {
-        fontSize: 24, // Increased
+        fontSize: 32, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A', // Dark text
     },
     activeLabel: {
         color: '#FFFFFF',
-        fontSize: 28, // Even bigger for active
+        fontSize: 36, // Even bigger for active
         fontFamily: FontFamily.montserratBold,
     },
     prayerTime: {
-        fontSize: 66, // Increased from 44
+        fontSize: 80, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A', // Dark text
         marginTop: 4,
     },
     activeTime: {
-        fontSize: 64, // Increased from 56
+        fontSize: 80, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#FFFFFF',
         marginTop: -4,
     },
     countdownText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: FontFamily.montserratBold,
         color: '#FFFFFF',
         marginTop: 4,

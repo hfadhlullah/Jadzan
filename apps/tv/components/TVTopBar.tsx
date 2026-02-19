@@ -58,8 +58,8 @@ export default function TVTopBar({ now, mosqueName, mosqueAddress }: TVTopBarPro
 
                 {/* Dates */}
                 <View style={styles.dateSection}>
-                    <Text style={styles.hijriText}>{hijriDate} H</Text>
                     <Text style={styles.gregorianText}>{gregorianDate}</Text>
+                    <Text style={styles.hijriText}>{hijriDate} H</Text>
                 </View>
             </View>
         </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     },
     glassHeader: {
         width: '95%',
-        height: 140, // increased height for bigger fonts
+        height: 200, // Increased to fit 130px clock
         backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glass white
         flexDirection: 'row',
         alignItems: 'center',
@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     timeText: {
-        fontSize: 96, // Increased from 72
+        fontSize: 130, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A', // prayer-navy
-        letterSpacing: -4,
+        letterSpacing: -6,
     },
     mosqueSection: {
         flex: 1,
@@ -132,16 +132,16 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     mosqueIcon: {
-        width: 40,
-        height: 40,
+        width: 48,
+        height: 48,
     },
     mosqueName: {
-        fontSize: 40, // Increased from 32
+        fontSize: 48, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A',
     },
     mosqueAddress: {
-        fontSize: 22, // Increased from 18
+        fontSize: 24, // Reference size
         fontFamily: FontFamily.montserratSemiBold, // Bolder
         color: '#1A233A',
         opacity: 0.8,
@@ -154,15 +154,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     hijriText: {
-        fontSize: 36, // Increased from 32
-        fontFamily: FontFamily.montserratBold,
+        fontSize: 28, // Secondary in reference
+        fontFamily: FontFamily.montserratSemiBold,
         color: '#1A233A',
+        marginTop: 4,
     },
     gregorianText: {
-        fontSize: 22, // Increased from 18
-        fontFamily: FontFamily.montserratSemiBold, // Bolder
+        fontSize: 36, // Primary in reference
+        fontFamily: FontFamily.montserratBold, // Bolder
         color: '#1A233A',
-        opacity: 0.8,
-        marginTop: 4,
     },
 });
