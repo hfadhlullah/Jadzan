@@ -36,7 +36,7 @@ export default function SideTopBar({ now, mosqueName, mosqueAddress, hijriAdjust
     hijriDateObj.setDate(hijriDateObj.getDate() + totalOffset);
 
     // Hijri Formatting: "20 Rajab 1445"
-    const hijriDate = hijriDateObj.toLocaleDateString('id-ID-u-ca-islamic', {
+    const hijriDate = hijriDateObj.toLocaleDateString('id-ID-u-ca-islamic-umalqura', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',

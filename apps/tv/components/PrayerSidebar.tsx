@@ -12,7 +12,7 @@ function formatTime(date: Date): string {
 
 function formatHijri(date: Date): string {
     try {
-        return date.toLocaleDateString('id-ID-u-ca-islamic', {
+        return date.toLocaleDateString('id-ID-u-ca-islamic-umalqura', {
             day: 'numeric', month: 'long', year: 'numeric',
         });
     } catch {

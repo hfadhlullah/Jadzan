@@ -41,7 +41,7 @@ export default function TVTopBar({ now, mosqueName, mosqueAddress, calculationMe
     const hijriDateObj = new Date(now);
     hijriDateObj.setDate(hijriDateObj.getDate() + totalOffset);
 
-    const hijriDate = hijriDateObj.toLocaleDateString('id-ID-u-ca-islamic', {
+    const hijriDate = hijriDateObj.toLocaleDateString('id-ID-u-ca-islamic-umalqura', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
