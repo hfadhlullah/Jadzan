@@ -9,6 +9,17 @@ interface TVBottomBarProps {
     currentPrayer: PrayerName | null;
 }
 
+const IslamicSeparator = () => (
+    <View style={styles.separatorContainer}>
+        {/* Top Line */}
+        <View style={styles.separatorLine} />
+        {/* Central Ornament */}
+        <Text style={styles.separatorOrnament}>❖</Text>
+        {/* Bottom Line */}
+        <View style={styles.separatorLine} />
+    </View>
+);
+
 export default function TVBottomBar({ prayers, nextPrayer, currentPrayer }: TVBottomBarProps) {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const formatTime = (date: Date) => `${pad(date.getHours())}:${pad(date.getMinutes())}`;
@@ -33,28 +44,33 @@ export default function TVBottomBar({ prayers, nextPrayer, currentPrayer }: TVBo
                     const isLast = index === prayers.length - 1;
 
                     return (
-                        <View
-                            key={prayer.name}
-                            style={[
-                                styles.prayerBox,
-                                isNext && styles.activePrayerBox,
-                                isFirst && styles.firstBox,
-                                isLast && styles.lastBox,
-                                (!isLast && !isNext && !(prayers[index + 1].name === nextPrayer)) && styles.withBorder
-                            ]}
-                        >
-                            <Text style={[styles.prayerLabel, isNext && styles.activeLabel]}>
-                                {prayer.label}
-                            </Text>
-                            <Text style={[styles.prayerTime, isNext && styles.activeTime]}>
-                                {formatTime(prayer.time)}
-                            </Text>
-                            {isNext && (
-                                <Text style={styles.countdownText}>
-                                    {renderCountdown(prayer.time)}
+                        <React.Fragment key={prayer.name}>
+                            <View
+                                style={[
+                                    styles.prayerBox,
+                                    isNext && styles.activePrayerBox,
+                                    (isFirst && isNext) && styles.firstBoxNext,
+                                    (isLast && isNext) && styles.lastBoxNext,
+                                ]}
+                            >
+                                <Text style={[styles.prayerLabel, isNext && styles.activeLabel]}>
+                                    {prayer.label}
                                 </Text>
+                                <Text style={[styles.prayerTime, isNext && styles.activeTime]}>
+                                    {formatTime(prayer.time)}
+                                </Text>
+                                {isNext && (
+                                    <Text style={styles.countdownText}>
+                                        {renderCountdown(prayer.time)}
+                                    </Text>
+                                )}
+                            </View>
+
+                            {/* Render separator if not the last item and neither this nor the next item is highlighted */}
+                            {!isLast && !isNext && !(prayers[index + 1].name === nextPrayer) && (
+                                <IslamicSeparator />
                             )}
-                        </View>
+                        </React.Fragment>
                     );
                 })}
             </View>
@@ -71,10 +87,13 @@ const styles = StyleSheet.create({
     glassFooter: {
         width: '95%',
         height: 160,
-        backgroundColor: '#FFFFFF', // White background
+        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glass white
         flexDirection: 'row',
         borderRadius: 40,
         overflow: 'hidden',
+        borderWidth: 1, // Add border for glass effect
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+        alignItems: 'center', // Center items vertically
         // Shadow for footer
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -10 },
@@ -82,23 +101,53 @@ const styles = StyleSheet.create({
         shadowRadius: 20,
         elevation: 15,
     },
+    separatorContainer: {
+        width: 1, // Minimize width impact
+        height: '80%', // Increased height
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1,
+        gap: 0, // No gap
+        overflow: 'visible', // Allow ornament to overflow
+    },
+    separatorLine: {
+        width: 1.5, // Thicker
+        flex: 1,
+        backgroundColor: '#D97706', // Solid Gold
+        opacity: 0.4,
+    },
+    separatorOrnament: {
+        fontSize: 16, // Larger
+        color: '#D97706', // Gold/Amber
+        opacity: 0.8, // More visible
+        lineHeight: 16,
+        textAlign: 'center',
+        width: 24, // Enough width for character
+        // Removed 'left' hack
+    },
     prayerBox: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 16,
+        height: '100%',
     },
     withBorder: {
-        borderRightWidth: 1,
-        borderRightColor: 'rgba(26, 35, 58, 0.1)', // Subtle dark border
+        // Removed
     },
     firstBox: {
-        borderTopLeftRadius: 40,
-        borderBottomLeftRadius: 40,
+        // Removed as borderRadius is on container
     },
     lastBox: {
-        borderTopRightRadius: 40,
-        borderBottomRightRadius: 40,
+        // Removed
+    },
+    // Styles for when active item is first/last to ensure corners are filled if needed,
+    // though container overflow:hidden handles most cases.
+    firstBoxNext: {
+        // specific styles if needed
+    },
+    lastBoxNext: {
+        // specific styles if needed
     },
     activePrayerBox: {
         backgroundColor: '#f39c12',

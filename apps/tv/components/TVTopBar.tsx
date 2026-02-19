@@ -1,12 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { Colors, FontFamily } from '../constants/theme';
+import { FontFamily } from '../constants/theme';
 
 interface TVTopBarProps {
     now: Date;
     mosqueName: string;
     mosqueAddress: string;
 }
+
+const IslamicSeparator = () => (
+    <View style={styles.separatorContainer}>
+        {/* Top Line */}
+        <View style={styles.separatorLine} />
+        {/* Central Ornament */}
+        <Text style={styles.separatorOrnament}>◆</Text>
+        {/* Bottom Line */}
+        <View style={styles.separatorLine} />
+    </View>
+);
 
 export default function TVTopBar({ now, mosqueName, mosqueAddress }: TVTopBarProps) {
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -33,17 +44,17 @@ export default function TVTopBar({ now, mosqueName, mosqueAddress }: TVTopBarPro
                     <Text style={styles.timeText}>{timeStr}</Text>
                 </View>
 
+                <IslamicSeparator />
+
                 {/* Mosque Info */}
                 <View style={styles.mosqueSection}>
                     <View style={styles.mosqueHeader}>
-                        <Image
-                            source={{ uri: 'https://img.icons8.com/ios-filled/50/f39c12/mosque.png' }}
-                            style={styles.mosqueIcon}
-                        />
                         <Text style={styles.mosqueName}>{mosqueName}</Text>
                     </View>
                     <Text style={styles.mosqueAddress}>{mosqueAddress}</Text>
                 </View>
+
+                <IslamicSeparator />
 
                 {/* Dates */}
                 <View style={styles.dateSection}>
@@ -64,13 +75,15 @@ const styles = StyleSheet.create({
     glassHeader: {
         width: '95%',
         height: 140, // increased height for bigger fonts
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glass white
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 60,
+        paddingHorizontal: 40, // Reduced padding
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
+        borderWidth: 1, // Add border for glass effect
+        borderColor: 'rgba(255, 255, 255, 0.5)',
         // Shadow for "glass" effect depth
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 10 },
@@ -78,10 +91,26 @@ const styles = StyleSheet.create({
         shadowRadius: 15,
         elevation: 10,
     },
+    separatorContainer: {
+        width: 40,
+        height: '60%', // Match content height
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 4,
+    },
+    separatorLine: {
+        width: 1,
+        flex: 1,
+        backgroundColor: 'rgba(217, 119, 6, 0.3)', // Faint gold line
+    },
+    separatorOrnament: {
+        fontSize: 14,
+        color: '#D97706', // Gold/Amber
+        opacity: 0.6,
+        lineHeight: 14, // Tight line height for alignment
+    },
     clockSection: {
-        borderRightWidth: 1,
-        borderColor: 'rgba(243, 156, 18, 0.3)', // Orange 400ish
-        paddingRight: 48,
+        paddingRight: 20, // Reduced padding
         height: '60%',
         justifyContent: 'center',
     },
@@ -103,36 +132,34 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     mosqueIcon: {
-        width: 32,
-        height: 32,
+        width: 40,
+        height: 40,
     },
     mosqueName: {
-        fontSize: 32, // Increased from 24
+        fontSize: 40, // Increased from 32
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A',
     },
     mosqueAddress: {
-        fontSize: 18, // Increased from 14
+        fontSize: 22, // Increased from 18
         fontFamily: FontFamily.montserratSemiBold, // Bolder
         color: '#1A233A',
         opacity: 0.8,
         marginTop: 4,
     },
     dateSection: {
-        borderLeftWidth: 1,
-        borderColor: 'rgba(243, 156, 18, 0.3)',
-        paddingLeft: 48,
+        paddingLeft: 20, // Reduced padding
         alignItems: 'flex-end',
         height: '60%',
         justifyContent: 'center',
     },
     hijriText: {
-        fontSize: 32, // Increased from 24
+        fontSize: 36, // Increased from 32
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A',
     },
     gregorianText: {
-        fontSize: 18, // Increased from 14
+        fontSize: 22, // Increased from 18
         fontFamily: FontFamily.montserratSemiBold, // Bolder
         color: '#1A233A',
         opacity: 0.8,
