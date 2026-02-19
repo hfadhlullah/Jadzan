@@ -6,7 +6,7 @@
     "orientation": "landscape",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0F172A",
-    "platforms": ["android"],
+    "platforms": ["android", "web"],
     "android": {
       "package": "com.jadzan.tv",
       "adaptiveIcon": {

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
+import { useRouter, Slot } from 'expo-router';
 import { FONTS } from '../constants/fonts';
 import { Colors } from '../constants/theme';
 import { useDeviceStore } from '../store/deviceStore';
@@ -55,10 +55,14 @@ export default function RootLayout() {
     return (
         <ErrorBoundary>
             <StatusBar hidden />
-            <View style={styles.splash}>
-                <Text style={styles.brandText}>🕌 Jadzan</Text>
-                <Text style={styles.subText}>Loading…</Text>
-            </View>
+            {fontsLoaded && !isLoading ? (
+                <Slot />
+            ) : (
+                <View style={styles.splash}>
+                    <Text style={styles.brandText}>🕌 Jadzan</Text>
+                    <Text style={styles.subText}>Loading…</Text>
+                </View>
+            )}
         </ErrorBoundary>
     );
 }
