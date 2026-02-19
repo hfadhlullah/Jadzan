@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     timeText: {
         fontSize: 64,
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         letterSpacing: -1,
     },
 });

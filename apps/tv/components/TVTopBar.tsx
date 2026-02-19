@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     timeText: {
         fontSize: 130, // Reference size
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#1A233A', // prayer-navy
         letterSpacing: 0, // Increased spacing
     },
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
     mosqueName: {
         fontSize: 48, // Reference size
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#1A233A',
     },
     mosqueAddress: {
@@ -169,6 +171,7 @@ const styles = StyleSheet.create({
     gregorianText: {
         fontSize: 36, // Primary in reference
         fontFamily: FontFamily.montserratBold, // Bolder
+        fontWeight: 'bold',
         color: '#1A233A',
     },
 });

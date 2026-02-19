@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     timeText: {
         fontSize: 90,
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#1E293B',
         includeFontPadding: false,
         lineHeight: 90,
@@ -115,14 +116,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     mosqueName: {
-        fontSize: 36,
+        fontSize: 48,
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#0F172A',
         textAlign: 'center',
         marginBottom: 4,
     },
     mosqueAddress: {
-        fontSize: 18,
+        fontSize: 24,
         fontFamily: FontFamily.montserratMedium,
         color: '#334155',
         textAlign: 'center',
@@ -133,14 +135,15 @@ const styles = StyleSheet.create({
         width: 280,
     },
     datePrimary: {
-        fontSize: 26,
+        fontSize: 32,
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#1E293B',
         textAlign: 'right',
         marginBottom: 4,
     },
     dateSecondary: {
-        fontSize: 20,
+        fontSize: 28,
         fontFamily: FontFamily.montserratMedium,
         color: '#475569',
         textAlign: 'right',

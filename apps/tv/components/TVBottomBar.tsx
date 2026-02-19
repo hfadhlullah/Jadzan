@@ -164,12 +164,14 @@ const styles = StyleSheet.create({
     prayerTime: {
         fontSize: 80, // Reference size
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#1A233A', // Dark text
         marginTop: 4,
     },
     activeTime: {
         fontSize: 80, // Reference size
         fontFamily: FontFamily.montserratBold,
+        fontWeight: 'bold',
         color: '#FFFFFF',
         marginTop: -4,
     },
