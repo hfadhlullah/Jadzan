@@ -70,7 +70,7 @@ export default function TVTopBar({ now, mosqueName, mosqueAddress, calculationMe
                 {/* Dates */}
                 <View style={styles.dateSection}>
                     <Text style={styles.gregorianText}>{gregorianDate}</Text>
-                    <Text style={styles.hijriText}>{hijriDate} H</Text>
+                    <Text style={styles.hijriText}>{hijriDate}</Text>
                 </View>
             </View>
         </View>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 130, // Reference size
         fontFamily: FontFamily.montserratBold,
         color: '#1A233A', // prayer-navy
-        letterSpacing: -6,
+        letterSpacing: 0, // Increased spacing
     },
     mosqueSection: {
         flex: 1,

@@ -11,6 +11,7 @@ import TVTopBar from '../components/TVTopBar';
 import TVBottomBar from '../components/TVBottomBar';
 // import TVBadges from '../components/TVBadges';
 import NewsTicker from '../components/NewsTicker';
+import MediaCarousel from '../components/MediaCarousel';
 
 interface MosqueConfig {
     latitude: number;
@@ -109,6 +110,8 @@ export default function FullDisplayScreen() {
                     calculationMethod={config.calculation_method}
                     hijriAdjustment={config.hijri_adjustment} // Pass manual adjustment
                 />
+
+                <MediaCarousel />
 
                 {/* Main Content Area (Center) */}
                 <View style={styles.mainContent}>

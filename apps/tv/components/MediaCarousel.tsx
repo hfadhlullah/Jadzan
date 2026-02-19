@@ -101,7 +101,7 @@ function MediaSlide({
             <Image
                 source={{ uri: item.url }}
                 style={styles.media}
-                resizeMode="contain"
+                resizeMode="cover"
             />
         );
     }
@@ -111,7 +111,7 @@ function MediaSlide({
             ref={videoRef}
             source={{ uri: item.url }}
             style={styles.media}
-            resizeMode={ResizeMode.CONTAIN}
+            resizeMode={ResizeMode.COVER}
             shouldPlay
             isLooping={false}
             onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
@@ -157,13 +157,7 @@ export default function MediaCarousel() {
     }
 
     if (items.length === 0) {
-        return (
-            <View style={styles.empty}>
-                <Text style={styles.emptyText}>🕌</Text>
-                <Text style={styles.emptyLabel}>No media assigned to this screen.</Text>
-                <Text style={styles.emptyHint}>Add content in the Admin Panel → Content Manager.</Text>
-            </View>
-        );
+        return null; // Don't show anything if no media, let default background show
     }
 
     const current = items[index % items.length];
@@ -195,8 +189,9 @@ export default function MediaCarousel() {
 
 const styles = StyleSheet.create({
     root: {
-        flex: 1,
+        ...StyleSheet.absoluteFillObject,
         backgroundColor: Colors.background,
+        zIndex: -1, // Behind other content
     },
     slide: {
         flex: 1,
