@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, Image } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, Image, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useRouter } from 'expo-router';
 import { supabase } from '../services/supabaseClient';
 import { storageService } from '../services/storageService';
 import { usePrayerStore } from '../store/prayerStore';
@@ -26,6 +27,7 @@ interface MosqueConfig {
 }
 
 export default function FullDisplayScreen() {
+    const router = useRouter();
     const [config, setConfig] = useState<MosqueConfig | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { startEngine, stopEngine, prayers, nextPrayer, currentPrayer, now } = usePrayerStore();
@@ -115,7 +117,13 @@ export default function FullDisplayScreen() {
 
                 {/* Main Content Area (Center) */}
                 <View style={styles.mainContent}>
-                    {/* <TVBadges /> */}
+                    {/* Switch to Side Layout */}
+                    <TouchableOpacity
+                        style={styles.fab}
+                        onPress={() => router.push('/side-display')}
+                    >
+                        <Text style={{ color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>SIDE</Text>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Bottom Bar */}
@@ -160,4 +168,18 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.inter,
         textAlign: 'center',
     },
+    fab: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 100,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.3)',
+    }
 });

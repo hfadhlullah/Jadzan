@@ -1,14 +1,64 @@
-import { View, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { Colors } from '../constants/theme';
+import { FONTS } from '../constants/fonts';
+import { useDeviceStore } from '../store/deviceStore';
 
 /**
- * Empty index component. 
- * Redirection logic is handled in _layout.tsx based on device state.
+ * Entry Point Index.
+ * Handles the initial routing and global asset loading.
  */
 export default function Index() {
+    const router = useRouter();
+    const { isConfigured, isLoading, loadFromStorage } = useDeviceStore();
+    const [fontsLoaded, fontError] = useFonts(FONTS);
+
+    useEffect(() => {
+        activateKeepAwakeAsync();
+        loadFromStorage();
+    }, [loadFromStorage]);
+
+    useEffect(() => {
+        if (!isLoading && fontsLoaded) {
+            if (isConfigured) {
+                router.replace('/full-display');
+            } else {
+                router.replace('/pairing');
+            }
+        }
+    }, [isLoading, fontsLoaded, isConfigured, router]);
+
+    if (fontError) {
+        return (
+            <View style={styles.center}>
+                <Text style={{ color: Colors.danger }}>Font Loading Error</Text>
+            </View>
+        );
+    }
+
     return (
-        <View style={{ flex: 1, backgroundColor: Colors.background, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.center}>
             <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>Initializing Jadzan...</Text>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    center: {
+        flex: 1,
+        backgroundColor: Colors.background,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 20
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 18,
+        color: '#64748b',
+        fontWeight: '500'
+    }
+});

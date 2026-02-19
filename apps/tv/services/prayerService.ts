@@ -51,12 +51,12 @@ export interface PrayerEngineState {
 
 const PRAYER_META: Record<PrayerName, { label: string; labelAr: string }> = {
   imsak:   { label: 'Imsak',   labelAr: 'إمساك'   },
-  fajr:    { label: 'Shubuh',  labelAr: 'الفجر'   },
+  fajr:    { label: 'Subuh',   labelAr: 'الفجر'   },
   sunrise: { label: 'Syuruq',  labelAr: 'الشروق'  },
   dhuhr:   { label: 'Dzuhur',  labelAr: 'الظهر'   },
   asr:     { label: 'Ashar',   labelAr: 'العصر'   },
   maghrib: { label: 'Maghrib', labelAr: 'المغرب'  },
-  isha:    { label: "Isya'",   labelAr: 'العشاء'  },
+  isha:    { label: 'Isya',    labelAr: 'العشاء'  },
 };
 
 const PRAYER_ORDER: PrayerName[] = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -214,9 +214,8 @@ export class PrayerEngine {
 
     if (next) {
       const secsUntil = Math.ceil((next.time.getTime() - now.getTime()) / 1000);
-      if (secsUntil <= APPROACHING_THRESHOLD_S) {
-        return this.buildState(now, 'APPROACHING', next.name, secsUntil);
-      }
+      const displayState: DisplayState = secsUntil <= APPROACHING_THRESHOLD_S ? 'APPROACHING' : 'IDLE';
+      return this.buildState(now, displayState, null, secsUntil);
     }
 
     return this.buildState(now, 'IDLE', null, 0);

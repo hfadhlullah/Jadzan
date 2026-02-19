@@ -7,7 +7,7 @@ import {
     Animated,
     ActivityIndicator,
 } from 'react-native';
-import { ResizeMode, Video as ExpoVideo, AVPlaybackStatus } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { supabase } from '../services/supabaseClient';
 import { storageService } from '../services/storageService';
 import { Colors, FontFamily } from '../constants/theme';
@@ -86,8 +86,6 @@ function MediaSlide({
     item: MediaItem;
     onEnd: () => void;
 }) {
-    const videoRef = useRef<ExpoVideo>(null);
-
     // Images: auto-advance after duration
     useEffect(() => {
         if (item.type !== 'IMAGE') return;
@@ -95,6 +93,20 @@ function MediaSlide({
         const timer = setTimeout(onEnd, ms);
         return () => clearTimeout(timer);
     }, [item, onEnd]);
+
+    const player = useVideoPlayer(item.url, (p) => {
+        p.loop = false;
+        p.play();
+    });
+
+    useEffect(() => {
+        const subscription = player.addListener('playToEnd', () => {
+            onEnd();
+        });
+        return () => {
+            subscription.remove();
+        };
+    }, [player, onEnd]);
 
     if (item.type === 'IMAGE') {
         return (
@@ -107,16 +119,12 @@ function MediaSlide({
     }
 
     return (
-        <ExpoVideo
-            ref={videoRef}
-            source={{ uri: item.url }}
+        <VideoView
+            player={player}
             style={styles.media}
-            resizeMode={ResizeMode.COVER}
-            shouldPlay
-            isLooping={false}
-            onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
-                if (status.isLoaded && status.didJustFinish) onEnd();
-            }}
+            contentFit="cover"
+            allowsFullscreen={false}
+            allowsPictureInPicture={false}
         />
     );
 }
