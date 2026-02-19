@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Animated,
     ActivityIndicator,
+    Platform,
 } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { supabase } from '../services/supabaseClient';
@@ -142,13 +143,13 @@ export default function MediaCarousel() {
         Animated.timing(fadeAnim, {
             toValue: 0,
             duration: 600,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== 'web',
         }).start(() => {
             setIndex((prev) => (prev + 1) % Math.max(items.length, 1));
             Animated.timing(fadeAnim, {
                 toValue: 1,
                 duration: 600,
-                useNativeDriver: true,
+                useNativeDriver: Platform.OS !== 'web',
             }).start();
         });
     }, [fadeAnim, items.length]);

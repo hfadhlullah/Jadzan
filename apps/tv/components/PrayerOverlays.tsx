@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { usePrayerStore } from '../store/prayerStore';
 import { Colors, FontSize, FontFamily } from '../constants/theme';
 
@@ -24,8 +24,8 @@ function ApproachingOverlay({
     useEffect(() => {
         const anim = Animated.loop(
             Animated.sequence([
-                Animated.timing(pulse, { toValue: 1.04, duration: 700, useNativeDriver: true }),
-                Animated.timing(pulse, { toValue: 1, duration: 700, useNativeDriver: true }),
+                Animated.timing(pulse, { toValue: 1.04, duration: 700, useNativeDriver: Platform.OS !== 'web' }),
+                Animated.timing(pulse, { toValue: 1, duration: 700, useNativeDriver: Platform.OS !== 'web' }),
             ])
         );
         anim.start();

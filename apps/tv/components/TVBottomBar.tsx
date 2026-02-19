@@ -94,11 +94,7 @@ const styles = StyleSheet.create({
         borderWidth: 1, // Add border for glass effect
         borderColor: 'rgba(255, 255, 255, 0.5)',
         alignItems: 'center', // Center items vertically
-        // Shadow for footer
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -10 },
-        shadowOpacity: 0.1,
-        shadowRadius: 20,
+        boxShadow: '0px -10px 20px rgba(0, 0, 0, 0.1)',
         elevation: 15,
     },
     separatorContainer: {
@@ -152,10 +148,7 @@ const styles = StyleSheet.create({
     activePrayerBox: {
         backgroundColor: '#f39c12',
         flex: 1.2,
-        shadowColor: '#f39c12',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.5,
-        shadowRadius: 15,
+        boxShadow: '0px 0px 15px rgba(243, 156, 18, 0.5)',
         elevation: 20,
     },
     prayerLabel: {

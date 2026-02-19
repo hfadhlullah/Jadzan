@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, Platform } from 'react-native';
 import { supabase } from '../services/supabaseClient';
 import { storageService } from '../services/storageService';
 import { Colors, FontFamily, Layout } from '../constants/theme';
@@ -57,7 +57,7 @@ export default function NewsTicker() {
                 toValue: -textWidth.current,
                 duration: (textWidth.current + containerWidth.current) * 15, // Speed factor
                 easing: Easing.linear,
-                useNativeDriver: true,
+                useNativeDriver: Platform.OS !== 'web',
             }).start(() => startAnimation());
         };
 
