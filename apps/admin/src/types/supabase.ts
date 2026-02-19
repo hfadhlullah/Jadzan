@@ -125,6 +125,7 @@ export type Database = {
           background_url: string | null
           calculation_method: string
           created_at: string
+          hijri_adjustment: number
           id: string
           iqomah_delays: Json
           latitude: number
@@ -140,6 +141,7 @@ export type Database = {
           background_url?: string | null
           calculation_method?: string
           created_at?: string
+          hijri_adjustment?: number
           id?: string
           iqomah_delays?: Json
           latitude?: number
@@ -155,6 +157,7 @@ export type Database = {
           background_url?: string | null
           calculation_method?: string
           created_at?: string
+          hijri_adjustment?: number
           id?: string
           iqomah_delays?: Json
           latitude?: number

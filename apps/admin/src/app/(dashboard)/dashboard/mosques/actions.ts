@@ -27,6 +27,7 @@ const UpsertMosqueSchema = z.object({
   iqomah_delays:      IqomahDelaysSchema,
   background_url:     z.string().url("Invalid background URL").or(z.literal("")).optional().nullable(),
   arabesque_opacity:  z.number().min(0).max(1).optional().nullable(),
+  hijri_adjustment:   z.number().int().min(-5).max(5).optional(),
 });
 
 export type IqomahDelays = z.infer<typeof IqomahDelaysSchema>;
@@ -94,6 +95,7 @@ export async function upsertMosque(
       iqomah_delays:      parsed.data.iqomah_delays,
       background_url:     parsed.data.background_url,
       arabesque_opacity:  parsed.data.arabesque_opacity,
+      hijri_adjustment:   parsed.data.hijri_adjustment,
     };
     const { error } = await supabase
       .from("mosques")
@@ -112,6 +114,7 @@ export async function upsertMosque(
       iqomah_delays:      parsed.data.iqomah_delays,
       background_url:     parsed.data.background_url,
       arabesque_opacity:  parsed.data.arabesque_opacity,
+      hijri_adjustment:   parsed.data.hijri_adjustment,
     };
     const { error } = await supabase
       .from("mosques")

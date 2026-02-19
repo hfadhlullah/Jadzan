@@ -47,6 +47,7 @@ export default function MosqueForm({ mosque }: MosqueFormProps) {
             calculation_method: data.get("calculation_method") as UpsertMosqueInput["calculation_method"],
             background_url: data.get("background_url") as string,
             arabesque_opacity: parseFloat(data.get("arabesque_opacity") as string),
+            hijri_adjustment: parseInt(data.get("hijri_adjustment") as string, 10),
             iqomah_delays: {
                 fajr: parseInt(data.get("iqomah_fajr") as string, 10),
                 dhuhr: parseInt(data.get("iqomah_dhuhr") as string, 10),
@@ -106,6 +107,18 @@ export default function MosqueForm({ mosque }: MosqueFormProps) {
                         {CALCULATION_METHODS.map((m) => (
                             <option key={m.value} value={m.value}>{m.label}</option>
                         ))}
+                    </select>
+                </Field>
+
+                <Field label="Hijri Date Adjustment (Days)" htmlFor="hijri_adjustment">
+                    <select id="hijri_adjustment" name="hijri_adjustment"
+                        defaultValue={mosque?.hijri_adjustment ?? 0}
+                        className={`${inputClass} bg-[var(--color-surface)] cursor-pointer`}>
+                        <option value="-2">-2 Days</option>
+                        <option value="-1">-1 Day</option>
+                        <option value="0">Default (0)</option>
+                        <option value="1">+1 Day</option>
+                        <option value="2">+2 Days</option>
                     </select>
                 </Field>
 

@@ -6,6 +6,8 @@ interface TVTopBarProps {
     now: Date;
     mosqueName: string;
     mosqueAddress: string;
+    calculationMethod?: string;
+    hijriAdjustment?: number;
 }
 
 const IslamicSeparator = () => (
@@ -19,7 +21,7 @@ const IslamicSeparator = () => (
     </View>
 );
 
-export default function TVTopBar({ now, mosqueName, mosqueAddress }: TVTopBarProps) {
+export default function TVTopBar({ now, mosqueName, mosqueAddress, calculationMethod, hijriAdjustment = 0 }: TVTopBarProps) {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
@@ -30,7 +32,16 @@ export default function TVTopBar({ now, mosqueName, mosqueAddress }: TVTopBarPro
         year: 'numeric'
     });
 
-    const hijriDate = now.toLocaleDateString('id-ID-u-ca-islamic', {
+    // Calculate Hijri date with combined adjustments
+    // Base: KEMENAG (-1 day heuristic)
+    // Manual: hijriAdjustment (user override from admin)
+    const baseOffset = calculationMethod === 'KEMENAG' ? -1 : 0;
+    const totalOffset = baseOffset + (hijriAdjustment || 0);
+
+    const hijriDateObj = new Date(now);
+    hijriDateObj.setDate(hijriDateObj.getDate() + totalOffset);
+
+    const hijriDate = hijriDateObj.toLocaleDateString('id-ID-u-ca-islamic', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',

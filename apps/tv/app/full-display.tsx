@@ -9,7 +9,7 @@ import type { IqomahDelays } from '../services/prayerService';
 
 import TVTopBar from '../components/TVTopBar';
 import TVBottomBar from '../components/TVBottomBar';
-import TVBadges from '../components/TVBadges';
+// import TVBadges from '../components/TVBadges';
 import NewsTicker from '../components/NewsTicker';
 
 interface MosqueConfig {
@@ -21,6 +21,7 @@ interface MosqueConfig {
     address: string | null;
     background_url: string | null;
     arabesque_opacity: number | null;
+    hijri_adjustment: number;
 }
 
 export default function FullDisplayScreen() {
@@ -38,7 +39,7 @@ export default function FullDisplayScreen() {
 
                 const { data, error: dbErr } = await supabase
                     .from('mosques')
-                    .select('latitude,longitude,calculation_method,iqomah_delays,name,address,background_url,arabesque_opacity')
+                    .select('latitude,longitude,calculation_method,iqomah_delays,name,address,background_url,arabesque_opacity,hijri_adjustment')
                     .eq('id', mosqueId)
                     .single();
 
@@ -105,6 +106,8 @@ export default function FullDisplayScreen() {
                     now={now}
                     mosqueName={config.name}
                     mosqueAddress={config.address || 'Bandung, Jawa Barat'}
+                    calculationMethod={config.calculation_method}
+                    hijriAdjustment={config.hijri_adjustment} // Pass manual adjustment
                 />
 
                 {/* Main Content Area (Center) */}
