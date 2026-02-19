@@ -1,0 +1,15 @@
+{
+  "name": "jadzan",
+  "private": true,
+  "workspaces": [
+    "apps/admin",
+    "apps/tv"
+  ],
+  "scripts": {
+    "admin": "bun --cwd apps/admin dev",
+    "tv": "bun --cwd apps/tv start"
+  },
+  "devDependencies": {
+    "supabase": "latest"
+  }
+}
