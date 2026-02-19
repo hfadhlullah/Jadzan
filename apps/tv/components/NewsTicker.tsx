@@ -49,21 +49,33 @@ export default function NewsTicker() {
     const fullText = announcements.join('   ·   ') || '📢 Welcome to our mosque. Please keep the prayer hall quiet.';
 
     useEffect(() => {
-        if (!textWidth.current || !containerWidth.current) return;
+        let isMoving = true;
 
         const startAnimation = () => {
+            if (!textWidth.current || !containerWidth.current || !isMoving) return;
+
             scrollX.setValue(containerWidth.current);
             Animated.timing(scrollX, {
                 toValue: -textWidth.current,
-                duration: (textWidth.current + containerWidth.current) * 15, // Speed factor
+                duration: (textWidth.current + containerWidth.current) * 15,
                 easing: Easing.linear,
                 useNativeDriver: Platform.OS !== 'web',
-            }).start(() => startAnimation());
+            }).start(({ finished }) => {
+                if (finished && isMoving) {
+                    // Use requestAnimationFrame to break the recursion stack
+                    requestAnimationFrame(startAnimation);
+                }
+            });
         };
 
-        startAnimation();
+        // Delay start slightly to ensure layout is settled
+        const initialTimeout = setTimeout(startAnimation, 100);
 
-        return () => scrollX.stopAnimation();
+        return () => {
+            isMoving = false;
+            clearTimeout(initialTimeout);
+            scrollX.stopAnimation();
+        };
     }, [fullText, scrollX]);
 
     return (
