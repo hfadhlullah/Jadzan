@@ -63,7 +63,7 @@ export const Spacing = {
 export const Layout = {
   sidebarWidth: '25%',   // Zone A — Prayer sidebar
   mediaStageWidth: '75%', // Zone B — Media carousel
-  tickerHeight: 80,       // Zone C — News ticker (px)
+  tickerHeight: 40,       // Zone C — News ticker (px)
   
   // Full Screen UI
   topBarHeight: 120,

@@ -66,12 +66,12 @@ function AdzanOverlay({ prayerLabel, prayerLabelAr }: { prayerLabel: string; pra
         <View style={adzan.container}>
             <Text style={adzan.title}>Adzan</Text>
 
-            <Animated.View style={{ transform: [{ scale: pulse }], alignItems: 'center' }}>
-                <Text style={adzan.prayer}>{prayerLabel}</Text>
-                <Text style={adzan.prayerAr}>{prayerLabelAr}</Text>
+            <Animated.View style={{ transform: [{ scale: pulse }], alignItems: 'center', paddingHorizontal: 40, width: '100%' }}>
+                <Text style={adzan.prayer} adjustsFontSizeToFit numberOfLines={1}>{prayerLabel}</Text>
+                <Text style={adzan.prayerAr} adjustsFontSizeToFit numberOfLines={1}>{prayerLabelAr}</Text>
             </Animated.View>
 
-            <Text style={adzan.sub}>Waktu shalat telah tiba</Text>
+            <Text style={adzan.sub} adjustsFontSizeToFit numberOfLines={1}>Waktu shalat telah tiba</Text>
         </View>
     );
 }
@@ -141,11 +141,13 @@ function IqomahOverlay({
 
     return (
         <View style={iqomah.container}>
-            <Text style={iqomah.label}>Iqomah {prayerLabel}</Text>
-            <Text style={[iqomah.timer, { color }]}>
-                {formatCountdown(countdown)}
-            </Text>
-            <Text style={iqomah.sub}>
+            <Text style={iqomah.label} adjustsFontSizeToFit numberOfLines={1}>Iqomah {prayerLabel}</Text>
+            <View style={{ width: '100%', paddingHorizontal: 40 }}>
+                <Text style={[iqomah.timer, { color }]} adjustsFontSizeToFit numberOfLines={1}>
+                    {formatCountdown(countdown)}
+                </Text>
+            </View>
+            <Text style={iqomah.sub} adjustsFontSizeToFit numberOfLines={1}>
                 {isUrgent ? '⚠ Harap segera berwudhu' : 'Bersiap untuk shalat'}
             </Text>
         </View>
@@ -161,9 +163,11 @@ function PrayerOverlay({ prayerLabel }: { prayerLabel: string }) {
                 style={prayer.pattern}
                 resizeMode="repeat"
             />
-            <Text style={prayer.arabic}>استووا واعتدلوا</Text>
-            <Text style={prayer.title}>SHOLAT SEDANG BERLANGSUNG</Text>
-            <Text style={prayer.sub}>{prayerLabel} · Harap tenang & matikan ponsel</Text>
+            <View style={{ width: '100%', paddingHorizontal: 40, alignItems: 'center' }}>
+                <Text style={prayer.arabic} adjustsFontSizeToFit numberOfLines={1}>استووا واعتدلوا</Text>
+                <Text style={prayer.title} adjustsFontSizeToFit numberOfLines={1}>SHOLAT SEDANG BERLANGSUNG</Text>
+                <Text style={prayer.sub} adjustsFontSizeToFit numberOfLines={1}>{prayerLabel} · Harap tenang & matikan ponsel</Text>
+            </View>
         </View>
     );
 }
@@ -219,19 +223,19 @@ const approaching = StyleSheet.create({
         right: 20,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10,
-        backgroundColor: 'rgba(217,119,6,0.15)',
+        gap: 8,
+        backgroundColor: 'rgba(217,119,6,0.1)',
         borderWidth: 1,
-        borderColor: Colors.accent,
-        borderRadius: 12,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        borderColor: 'rgba(217,119,6,0.2)',
+        borderRadius: 30, // Pill shaped
+        paddingHorizontal: 16,
+        paddingVertical: 6,
         zIndex: 100,
     },
-    emoji: { fontSize: 24 },
+    emoji: { fontSize: 16 },
     text: {
-        color: Colors.textPrimary,
-        fontSize: 20,
+        color: '#1E293B',
+        fontSize: 14,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
@@ -247,27 +251,27 @@ const adzan = StyleSheet.create({
     },
     title: {
         color: Colors.accent,
-        fontSize: 64,
+        fontSize: 24,
         fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
-        letterSpacing: 24,
+        letterSpacing: 10,
     },
     prayer: {
         color: '#FFFFFF',
-        fontSize: 280,
+        fontSize: 120,
         fontFamily: FontFamily.amiriBold,
         textAlign: 'center',
-        lineHeight: 300,
+        lineHeight: 140,
     },
     prayerAr: {
         color: Colors.accent,
-        fontSize: 180,
+        fontSize: 80,
         fontFamily: FontFamily.amiri,
-        marginTop: 20,
+        marginTop: 10,
     },
     sub: {
-        color: Colors.textSecondary,
-        fontSize: 60,
+        color: '#94A3B8',
+        fontSize: 32,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
@@ -282,21 +286,22 @@ const iqomah = StyleSheet.create({
         zIndex: 200,
     },
     label: {
-        color: Colors.textSecondary,
-        fontSize: 64,
+        color: '#94A3B8',
+        fontSize: 32,
         fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
-        letterSpacing: 6,
+        letterSpacing: 4,
     },
     timer: {
-        fontSize: 450,
+        fontSize: 180,
         fontFamily: FontFamily.montserratBold,
-        letterSpacing: 16,
-        lineHeight: 480,
+        letterSpacing: 8,
+        lineHeight: 200,
+        textAlign: 'center',
     },
     sub: {
-        color: Colors.textSecondary,
-        fontSize: 60,
+        color: '#94A3B8',
+        fontSize: 32,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
@@ -317,21 +322,22 @@ const prayer = StyleSheet.create({
     },
     arabic: {
         color: Colors.primary,
-        fontSize: 140,
+        fontSize: 60,
         fontFamily: FontFamily.amiri,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     title: {
         color: '#FFFFFF',
-        fontSize: 140,
+        fontSize: 50,
         fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
         textAlign: 'center',
-        letterSpacing: 16,
+        letterSpacing: 6,
+        marginBottom: 8,
     },
     sub: {
-        color: Colors.textSecondary,
-        fontSize: 72,
+        color: '#94A3B8',
+        fontSize: 32,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });

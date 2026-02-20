@@ -231,6 +231,7 @@ export class PrayerEngine {
     if (current.phase === 'ADZAN') {
       // FORCE 5 seconds for testing
       const delayMs = 5 * 1000; 
+      // const delayMs = delays[current.prayer];
       return {
         prayer: current.prayer,
         phase: 'IQOMAH',

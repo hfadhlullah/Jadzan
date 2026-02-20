@@ -64,14 +64,20 @@ export default function SidePrayerList({ prayers, nextPrayer, currentPrayer, dis
                     <React.Fragment key={entry.name}>
                         <View style={rowStyle}>
                             {/* Name Badge */}
-                            <View style={badgeStyle}>
-                                <Text style={[styles.nameText, { color: nameColor }]}>
+                            {!isHighlight ? (
+                                <View style={badgeStyle}>
+                                    <Text style={[styles.nameText, { color: nameColor }]} adjustsFontSizeToFit numberOfLines={1}>
+                                        {entry.label}
+                                    </Text>
+                                </View>
+                            ) : (
+                                <Text style={[styles.nameText, { color: '#FFFFFF' }]} adjustsFontSizeToFit numberOfLines={1}>
                                     {entry.label}
                                 </Text>
-                            </View>
+                            )}
 
                             {/* Time */}
-                            <Text style={[styles.timeText, { color: timeColor }]}>
+                            <Text style={[styles.timeText, { color: timeColor }]} adjustsFontSizeToFit numberOfLines={1}>
                                 {formatTime(entry.time)}
                             </Text>
                         </View>
@@ -96,50 +102,49 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     row: {
-        flex: 1,
+        height: 55, // Shrunk from 80 to fit more items and push up
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 44,
-        marginVertical: 0,
+        paddingHorizontal: 32,
         backgroundColor: '#FFFFFF',
     },
     separatorContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 10,
-        paddingHorizontal: 60,
+        height: 1,
+        marginVertical: 4, // Tighter spacing
+        paddingHorizontal: 48,
     },
     separatorLine: {
         flex: 1,
         height: 1,
-        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+        backgroundColor: '#F1F5F9', // Very subtle gray line
     },
     separatorOrnament: {
-        fontSize: 12,
-        color: '#D97706',
+        fontSize: 10,
+        color: '#D1D5DB',
         opacity: 0.5,
         marginHorizontal: 12,
     },
     badge: {
-        paddingVertical: 24,
-        paddingHorizontal: 44,
-        borderRadius: 50,
-        minWidth: 140,
+        paddingVertical: 8, // Much smaller
+        paddingHorizontal: 24, // Smaller
+        borderRadius: 20,
+        minWidth: 100, // Enough for labels
         alignItems: 'center',
         justifyContent: 'center',
     },
     nameText: {
-        fontSize: 26,
-        fontFamily: FontFamily.montserratBold,
+        fontSize: 16, // Much smaller
+        fontFamily: FontFamily.montserratSemiBold,
         textTransform: 'capitalize',
-        letterSpacing: 0.5,
     },
     timeText: {
-        fontSize: 64,
+        fontSize: 32, // Shrunk to fit better
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
-        letterSpacing: -1,
+        color: '#1E293B',
     },
 });

@@ -95,6 +95,7 @@ export default function SideDisplayScreen() {
                         displayState={displayState}
                         now={now}
                     />
+                    <Text style={styles.sidebarFooterText}>asda</Text>
                 </View>
 
                 {/* Right Content: Media Area */}
@@ -111,7 +112,7 @@ export default function SideDisplayScreen() {
                     {/* Status Pill Overlays */}
                     <View style={styles.statusPills}>
                         <View style={styles.statusPill}>
-                            <Text style={styles.statusPillText}>
+                            <Text style={styles.statusPillText} adjustsFontSizeToFit numberOfLines={1}>
                                 {(() => {
                                     const next = prayers.find(p => p.name === nextPrayer);
                                     if (!next) return '';
@@ -156,24 +157,28 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8FAFC',
     },
     errorText: {
-        color: Colors.danger,
-        fontSize: 20,
+        color: '#EF4444',
+        fontSize: 14,
+        fontFamily: FontFamily.montserratSemiBold,
     },
     body: {
         flex: 1,
         flexDirection: 'row',
     },
     sidebar: {
-        width: '22%',
+        width: '30%', // Adjusted width for better proportion
         height: '100%',
         backgroundColor: '#FFFFFF',
         borderRightWidth: 1,
-        borderRightColor: '#E2E8F0',
+        borderRightColor: '#F1F5F9',
     },
     contentArea: {
-        flex: 1, // Takes remaining 70%
+        flex: 1,
         position: 'relative',
-        backgroundColor: '#0F172A', // Dark background for media
+        backgroundColor: '#0F172A',
+        overflow: 'hidden',
+        borderTopWidth: 1,
+        borderTopColor: '#F1F5F9',
     },
     fab: {
         position: 'absolute',
@@ -191,22 +196,30 @@ const styles = StyleSheet.create({
     },
     statusPills: {
         position: 'absolute',
-        bottom: 40,
-        left: 40,
+        bottom: 20,
+        left: 20,
         flexDirection: 'row',
-        gap: 20,
+        zIndex: 10,
     },
     statusPill: {
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        paddingVertical: 12,
-        paddingHorizontal: 30,
-        borderRadius: 40,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-        elevation: 10,
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+        elevation: 5,
     },
     statusPillText: {
-        fontSize: 32,
-        fontFamily: FontFamily.montserratBold,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratSemiBold,
         color: '#1E293B',
     },
+    sidebarFooterText: {
+        position: 'absolute',
+        bottom: 10,
+        left: 20,
+        fontSize: 10,
+        color: '#94A3B8',
+        fontFamily: FontFamily.montserratMedium,
+    }
 });

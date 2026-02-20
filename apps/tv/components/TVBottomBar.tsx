@@ -53,14 +53,14 @@ export default function TVBottomBar({ prayers, nextPrayer, currentPrayer }: TVBo
                                     (isLast && isNext) && styles.lastBoxNext,
                                 ]}
                             >
-                                <Text style={[styles.prayerLabel, isNext && styles.activeLabel]}>
+                                <Text style={[styles.prayerLabel, isNext && styles.activeLabel]} adjustsFontSizeToFit numberOfLines={1}>
                                     {prayer.label}
                                 </Text>
-                                <Text style={[styles.prayerTime, isNext && styles.activeTime]}>
+                                <Text style={[styles.prayerTime, isNext && styles.activeTime]} adjustsFontSizeToFit numberOfLines={1}>
                                     {formatTime(prayer.time)}
                                 </Text>
                                 {isNext && (
-                                    <Text style={styles.countdownText}>
+                                    <Text style={styles.countdownText} adjustsFontSizeToFit numberOfLines={1}>
                                         {renderCountdown(prayer.time)}
                                     </Text>
                                 )}
@@ -86,16 +86,16 @@ const styles = StyleSheet.create({
     },
     glassFooter: {
         width: '95%',
-        height: 200, // Increased from 160 to fit larger fonts + countdown
-        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glass white
+        height: 120, // Match the slimmer height of the web app
+        backgroundColor: 'rgba(255, 255, 255, 0.95)', // Slightly more opaque white
         flexDirection: 'row',
-        borderRadius: 40,
+        borderRadius: 30, // Softer radius to match web
         overflow: 'hidden',
-        borderWidth: 1, // Add border for glass effect
+        borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.5)',
-        alignItems: 'center', // Center items vertically
-        boxShadow: '0px -10px 20px rgba(0, 0, 0, 0.1)',
-        elevation: 15,
+        alignItems: 'center',
+        boxShadow: '0px -5px 15px rgba(0, 0, 0, 0.05)', // Softer shadow
+        elevation: 10,
     },
     separatorContainer: {
         width: 1, // Minimize width impact
@@ -107,19 +107,18 @@ const styles = StyleSheet.create({
         overflow: 'visible', // Allow ornament to overflow
     },
     separatorLine: {
-        width: 1.5, // Thicker
+        width: 1,
         flex: 1,
-        backgroundColor: '#D97706', // Solid Gold
-        opacity: 0.4,
+        backgroundColor: '#D97706',
+        opacity: 0.3, // Match web faintness
     },
     separatorOrnament: {
-        fontSize: 16, // Larger
-        color: '#D97706', // Gold/Amber
-        opacity: 0.8, // More visible
+        fontSize: 10, // Match small diamond
+        color: '#D97706',
+        opacity: 0.5,
         lineHeight: 16,
         textAlign: 'center',
-        width: 24, // Enough width for character
-        // Removed 'left' hack
+        width: 24,
     },
     prayerBox: {
         flex: 1,
@@ -146,39 +145,40 @@ const styles = StyleSheet.create({
         // specific styles if needed
     },
     activePrayerBox: {
-        backgroundColor: '#f39c12',
-        flex: 1.2,
-        boxShadow: '0px 0px 15px rgba(243, 156, 18, 0.5)',
-        elevation: 20,
+        backgroundColor: '#F59E0B', // Web warning yellow color
+        flex: 1.05, // Subtle pop, not massive
+        boxShadow: '0px 0px 15px rgba(245, 158, 11, 0.4)',
+        elevation: 15,
     },
     prayerLabel: {
-        fontSize: 32, // Reference size
-        fontFamily: FontFamily.montserratBold,
-        color: '#1A233A', // Dark text
+        fontSize: 16, // Match web small size
+        fontFamily: FontFamily.montserratSemiBold,
+        color: '#64748B', // Muted slate color for labels
     },
     activeLabel: {
         color: '#FFFFFF',
-        fontSize: 36, // Even bigger for active
-        fontFamily: FontFamily.montserratBold,
+        fontSize: 18,
+        fontFamily: FontFamily.montserratSemiBold,
     },
     prayerTime: {
-        fontSize: 80, // Reference size
+        fontSize: 32, // Match web clock size
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
-        color: '#1A233A', // Dark text
+        color: '#1E293B', // Slate 800
         marginTop: 4,
     },
     activeTime: {
-        fontSize: 80, // Reference size
+        fontSize: 36,
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
         color: '#FFFFFF',
-        marginTop: -4,
+        marginTop: 4,
     },
     countdownText: {
-        fontSize: 20,
-        fontFamily: FontFamily.montserratBold,
+        fontSize: 12,
+        fontFamily: FontFamily.montserratMedium,
         color: '#FFFFFF',
+        opacity: 0.9,
         marginTop: 4,
     },
 });

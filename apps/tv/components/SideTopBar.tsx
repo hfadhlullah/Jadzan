@@ -46,7 +46,7 @@ export default function SideTopBar({ now, mosqueName, mosqueAddress, hijriAdjust
         <View style={styles.container}>
             {/* Left: Clock */}
             <View style={styles.clockSection}>
-                <Text style={styles.timeText}>{timeStr}</Text>
+                <Text style={styles.timeText} adjustsFontSizeToFit numberOfLines={1}>{timeStr}</Text>
             </View>
 
             {/* Divider */}
@@ -54,8 +54,8 @@ export default function SideTopBar({ now, mosqueName, mosqueAddress, hijriAdjust
 
             {/* Center: Mosque Info */}
             <View style={styles.centerSection}>
-                <Text style={styles.mosqueName} numberOfLines={1}>{mosqueName}</Text>
-                <Text style={styles.mosqueAddress} numberOfLines={1}>{mosqueAddress}</Text>
+                <Text style={styles.mosqueName} adjustsFontSizeToFit numberOfLines={1}>{mosqueName}</Text>
+                <Text style={styles.mosqueAddress} adjustsFontSizeToFit numberOfLines={1}>{mosqueAddress}</Text>
             </View>
 
             {/* Divider */}
@@ -63,8 +63,8 @@ export default function SideTopBar({ now, mosqueName, mosqueAddress, hijriAdjust
 
             {/* Right: Date */}
             <View style={styles.dateSection}>
-                <Text style={styles.datePrimary}>{gregorianDate}</Text>
-                <Text style={styles.dateSecondary}>{hijriDate}</Text>
+                <Text style={styles.datePrimary} adjustsFontSizeToFit numberOfLines={1}>{gregorianDate}</Text>
+                <Text style={styles.dateSecondary} adjustsFontSizeToFit numberOfLines={1}>{hijriDate}</Text>
             </View>
         </View>
     );
@@ -72,13 +72,13 @@ export default function SideTopBar({ now, mosqueName, mosqueAddress, hijriAdjust
 
 const styles = StyleSheet.create({
     container: {
-        height: 120,
+        height: 80, // Slimmer height
         backgroundColor: '#FFFFFF',
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 40,
         borderBottomWidth: 1,
-        borderBottomColor: '#E2E8F0',
+        borderBottomColor: '#F1F5F9',
     },
     separatorContainer: {
         width: 60,
@@ -103,12 +103,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     timeText: {
-        fontSize: 90,
+        fontSize: 48, // Much smaller
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
         color: '#1E293B',
         includeFontPadding: false,
-        lineHeight: 90,
     },
     centerSection: {
         flex: 1,
@@ -116,17 +115,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     mosqueName: {
-        fontSize: 48,
+        fontSize: 24, // Smaller
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
         color: '#0F172A',
         textAlign: 'center',
-        marginBottom: 4,
     },
     mosqueAddress: {
-        fontSize: 24,
+        fontSize: 14, // Smaller
         fontFamily: FontFamily.montserratMedium,
-        color: '#334155',
+        color: '#64748B',
         textAlign: 'center',
     },
     dateSection: {
@@ -135,17 +133,16 @@ const styles = StyleSheet.create({
         width: 280,
     },
     datePrimary: {
-        fontSize: 32,
+        fontSize: 20, // Smaller
         fontFamily: FontFamily.montserratBold,
         fontWeight: 'bold',
         color: '#1E293B',
         textAlign: 'right',
-        marginBottom: 4,
     },
     dateSecondary: {
-        fontSize: 28,
+        fontSize: 16, // Smaller
         fontFamily: FontFamily.montserratMedium,
-        color: '#475569',
+        color: '#64748B',
         textAlign: 'right',
     },
 });
