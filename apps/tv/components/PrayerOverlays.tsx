@@ -246,7 +246,8 @@ const adzan = StyleSheet.create({
         backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 60,
+        paddingVertical: 40,
+        gap: 30,
         zIndex: 200,
     },
     title: {
@@ -258,20 +259,20 @@ const adzan = StyleSheet.create({
     },
     prayer: {
         color: '#FFFFFF',
-        fontSize: 120,
+        fontSize: 100,
         fontFamily: FontFamily.amiriBold,
         textAlign: 'center',
-        lineHeight: 140,
+        lineHeight: 120,
     },
     prayerAr: {
         color: Colors.accent,
-        fontSize: 80,
+        fontSize: 70,
         fontFamily: FontFamily.amiri,
         marginTop: 10,
     },
     sub: {
         color: '#94A3B8',
-        fontSize: 32,
+        fontSize: 28,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
@@ -282,26 +283,27 @@ const iqomah = StyleSheet.create({
         backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 40,
+        paddingVertical: 40,
+        gap: 30,
         zIndex: 200,
     },
     label: {
         color: '#94A3B8',
-        fontSize: 32,
+        fontSize: 28,
         fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
         letterSpacing: 4,
     },
     timer: {
-        fontSize: 180,
+        fontSize: 160,
         fontFamily: FontFamily.montserratBold,
         letterSpacing: 8,
-        lineHeight: 200,
+        lineHeight: 180,
         textAlign: 'center',
     },
     sub: {
         color: '#94A3B8',
-        fontSize: 32,
+        fontSize: 28,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
@@ -312,7 +314,8 @@ const prayer = StyleSheet.create({
         backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 60,
+        paddingVertical: 40,
+        gap: 30,
         zIndex: 200,
     },
     pattern: {
@@ -322,13 +325,13 @@ const prayer = StyleSheet.create({
     },
     arabic: {
         color: Colors.primary,
-        fontSize: 60,
+        fontSize: 50,
         fontFamily: FontFamily.amiri,
         marginBottom: 10,
     },
     title: {
         color: '#FFFFFF',
-        fontSize: 50,
+        fontSize: 40,
         fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
         textAlign: 'center',
@@ -337,7 +340,7 @@ const prayer = StyleSheet.create({
     },
     sub: {
         color: '#94A3B8',
-        fontSize: 32,
+        fontSize: 28,
         fontFamily: FontFamily.montserratSemiBold,
     },
 });
