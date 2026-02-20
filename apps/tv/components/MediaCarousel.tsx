@@ -7,6 +7,7 @@ import {
     Animated,
     ActivityIndicator,
     Platform,
+    InteractionManager,
 } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { supabase } from '../services/supabaseClient';
@@ -80,21 +81,23 @@ function useMediaItems() {
 // MediaSlide — renders one slide
 // ─────────────────────────────────────────────────────────────
 
-function MediaSlide({
-    item,
-    onEnd,
-}: {
-    item: MediaItem;
-    onEnd: () => void;
-}) {
-    // Images: auto-advance after duration
+function ImageSlide({ item, onEnd }: { item: MediaItem; onEnd: () => void }) {
     useEffect(() => {
-        if (item.type !== 'IMAGE') return;
         const ms = item.duration ? item.duration * 1000 : DEFAULT_IMAGE_DURATION_MS;
         const timer = setTimeout(onEnd, ms);
         return () => clearTimeout(timer);
     }, [item, onEnd]);
 
+    return (
+        <Image
+            source={{ uri: item.url }}
+            style={styles.media}
+            resizeMode="cover"
+        />
+    );
+}
+
+function VideoSlide({ item, onEnd }: { item: MediaItem; onEnd: () => void }) {
     const player = useVideoPlayer(item.url, (p) => {
         p.loop = false;
         p.play();
@@ -104,20 +107,8 @@ function MediaSlide({
         const subscription = player.addListener('playToEnd', () => {
             onEnd();
         });
-        return () => {
-            subscription.remove();
-        };
+        return () => subscription.remove();
     }, [player, onEnd]);
-
-    if (item.type === 'IMAGE') {
-        return (
-            <Image
-                source={{ uri: item.url }}
-                style={styles.media}
-                resizeMode="cover"
-            />
-        );
-    }
 
     return (
         <VideoView
@@ -130,6 +121,19 @@ function MediaSlide({
     );
 }
 
+function MediaSlide({
+    item,
+    onEnd,
+}: {
+    item: MediaItem;
+    onEnd: () => void;
+}) {
+    if (item.type === 'IMAGE') {
+        return <ImageSlide item={item} onEnd={onEnd} />;
+    }
+    return <VideoSlide item={item} onEnd={onEnd} />;
+}
+
 // ─────────────────────────────────────────────────────────────
 // MediaCarousel — main component
 // ─────────────────────────────────────────────────────────────
@@ -138,6 +142,17 @@ export default function MediaCarousel() {
     const { items, loading } = useMediaItems();
     const [index, setIndex] = useState(0);
     const fadeAnim = useRef(new Animated.Value(1)).current;
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        // Ensure the native Android Activity is fully attached in Bridgeless mode
+        // before we mount heavy native components like expo-video.
+        const task = InteractionManager.runAfterInteractions(() => {
+            const timer = setTimeout(() => setIsReady(true), 500);
+            return () => clearTimeout(timer);
+        });
+        return () => task.cancel();
+    }, []);
 
     const advance = useCallback(() => {
         Animated.timing(fadeAnim, {
@@ -159,7 +174,7 @@ export default function MediaCarousel() {
     // Reset index when items reload
     useEffect(() => { setIndex(0); }, [items]);
 
-    if (loading) {
+    if (loading || !isReady) {
         return (
             <View style={styles.center}>
                 <ActivityIndicator size="large" color={Colors.primary} />

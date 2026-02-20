@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { Colors } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { useDeviceStore } from '../store/deviceStore';
@@ -17,17 +16,20 @@ export default function Index() {
     const [fontsLoaded, fontError] = useFonts(FONTS);
 
     useEffect(() => {
-        activateKeepAwakeAsync();
         loadFromStorage();
     }, [loadFromStorage]);
 
     useEffect(() => {
         if (!isLoading && fontsLoaded) {
-            if (isConfigured) {
-                router.replace('/full-display');
-            } else {
-                router.replace('/pairing');
-            }
+            // Use setTimeout instead of requestAnimationFrame because headless/emulators 
+            // might not tick frames while the splash screen or layout is still resolving.
+            setTimeout(() => {
+                if (isConfigured) {
+                    router.replace('/full-display');
+                } else {
+                    router.replace('/pairing');
+                }
+            }, 100);
         }
     }, [isLoading, fontsLoaded, isConfigured, router]);
 
