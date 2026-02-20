@@ -6,7 +6,10 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "BUN_INSTALL_FROZEN_LOCKFILE": "0"
+        }
       }
     },
     "production": {

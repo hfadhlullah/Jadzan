@@ -9,7 +9,21 @@
     "admin": "bun --cwd apps/admin dev",
     "tv": "bun --cwd apps/tv start"
   },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "expo": "~54.0.33",
+    "expo-router": "^6.0.23"
+  },
   "devDependencies": {
     "supabase": "latest"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "expo-router": "^6.0.23",
+    "@react-navigation/native": "^7.1.8",
+    "@react-navigation/core": "^7.14.0",
+    "whatwg-fetch": "^3.6.20"
   }
 }

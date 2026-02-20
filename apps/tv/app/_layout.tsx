@@ -12,25 +12,23 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
  */
 export default function RootLayout() {
     return (
-        <SafeAreaProvider>
-            <ErrorBoundary>
-                <StatusBar hidden />
-                <Stack
-                    screenOptions={{
-                        headerShown: false,
-                        // Enable animations cross-platform
-                        animation: Platform.OS === 'web' ? 'fade' : 'slide_from_right',
-                        animationDuration: 400,
-                        // Ensure screen reconciles correctly during transitions
-                        gestureEnabled: true,
-                    }}
-                >
-                    <Stack.Screen name="index" options={{ animation: 'none' }} />
-                    <Stack.Screen name="full-display" />
-                    <Stack.Screen name="side-display" />
-                    <Stack.Screen name="pairing" />
-                </Stack>
-            </ErrorBoundary>
-        </SafeAreaProvider>
+        <ErrorBoundary>
+            <StatusBar hidden />
+            <Stack
+                screenOptions={{
+                    headerShown: false,
+                    // Enable animations cross-platform
+                    animation: Platform.OS === 'web' ? 'fade' : 'slide_from_right',
+                    animationDuration: 400,
+                    // Ensure screen reconciles correctly during transitions
+                    gestureEnabled: true,
+                }}
+            >
+                <Stack.Screen name="index" options={{ animation: 'none' }} />
+                <Stack.Screen name="full-display" />
+                <Stack.Screen name="side-display" />
+                <Stack.Screen name="pairing" />
+            </Stack>
+        </ErrorBoundary>
     );
 }
