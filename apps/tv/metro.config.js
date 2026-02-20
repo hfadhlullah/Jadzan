@@ -15,7 +15,17 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-// 3. For web, ensure we handle .mjs and other extensions correctly
+// 3. Force common libraries to use the version in the project root to avoid duplication
+config.resolver.extraNodeModules = {
+  'react': path.resolve(projectRoot, 'node_modules/react'),
+  'react-native': path.resolve(projectRoot, 'node_modules/react-native'),
+  '@react-navigation/native': path.resolve(projectRoot, 'node_modules/@react-navigation/native'),
+};
+
+// 4. Ensure we don't pick up common libraries from other locations
+config.resolver.disableHierarchicalLookup = true;
+
+// 5. For web, ensure we handle .mjs and other extensions correctly
 config.resolver.sourceExts.push('mjs');
 
 module.exports = config;
