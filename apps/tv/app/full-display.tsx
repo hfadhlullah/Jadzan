@@ -122,6 +122,9 @@ export default function FullDisplayScreen() {
                     <TouchableOpacity
                         style={styles.fab}
                         onPress={() => router.push('/side-display')}
+                        accessible={true}
+                        hasTVPreferredFocus={true}
+                        activeOpacity={0.7}
                     >
                         <Text style={{ color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>SIDE</Text>
                     </TouchableOpacity>

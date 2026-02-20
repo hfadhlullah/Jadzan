@@ -126,10 +126,12 @@ export default function SideDisplayScreen() {
                         </View>
                     </View>
 
-                    {/* Switch Button Overlay */}
                     <TouchableOpacity
                         style={styles.fab}
                         onPress={() => router.push('/full-display')}
+                        accessible={true}
+                        hasTVPreferredFocus={true}
+                        activeOpacity={0.7}
                     >
                         <Text style={{ color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>FULL</Text>
                     </TouchableOpacity>

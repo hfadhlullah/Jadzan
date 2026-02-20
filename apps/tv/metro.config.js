@@ -17,8 +17,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-// 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
 
 // 4. Ensure we alias React and React Native to the same instance
 config.resolver.extraNodeModules = {
@@ -27,6 +25,7 @@ config.resolver.extraNodeModules = {
   'expo-router': path.resolve(workspaceRoot, 'node_modules/expo-router'),
   '@react-navigation/native': path.resolve(workspaceRoot, 'node_modules/@react-navigation/native'),
   '@react-navigation/core': path.resolve(workspaceRoot, 'node_modules/@react-navigation/core'),
+  '@react-navigation/elements': path.resolve(workspaceRoot, 'node_modules/@react-navigation/elements'),
   'whatwg-fetch': path.resolve(workspaceRoot, 'node_modules/whatwg-fetch'),
 };
 
