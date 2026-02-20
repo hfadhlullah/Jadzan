@@ -62,9 +62,9 @@ const PRAYER_META: Record<PrayerName, { label: string; labelAr: string }> = {
 const PRAYER_ORDER: PrayerName[] = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
 // How long the adzan phase lasts (ms) before IQOMAH starts
-const ADZAN_DURATION_MS = 5 * 60 * 1000;
+const ADZAN_DURATION_MS = 5 * 1000;
 // How long the prayer phase lasts (ms) after iqomah ends
-const PRAYER_DURATION_MS = 15 * 60 * 1000;
+const PRAYER_DURATION_MS = 5 * 1000;
 // How many seconds before prayer to show APPROACHING warning
 const APPROACHING_THRESHOLD_S = 5 * 60;
 
@@ -160,7 +160,10 @@ export class PrayerEngine {
     const now = new Date();
     const { lat, lng, method } = this.config;
     this.todayPrayers = getPrayerEntries(lat, lng, method, now);
-
+    // force fajr to be 10 seconds from now (for testing)
+    if (this.todayPrayers.length > 1) {
+      this.todayPrayers[1].time = new Date(now.getTime() + 10 * 1000);
+    }
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowEntries = getPrayerEntries(lat, lng, method, tomorrow);
@@ -199,7 +202,10 @@ export class PrayerEngine {
     }
 
     // Check if any prayer just started (within last 5 min = adzan window)
+    const ADZAN_PRAYERS: PrayerName[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
     for (const prayer of [...this.todayPrayers].reverse()) {
+      if (!ADZAN_PRAYERS.includes(prayer.name)) continue;
+
       const diff = now.getTime() - prayer.time.getTime();
       if (diff >= 0 && diff < ADZAN_DURATION_MS) {
         const phaseEnd = new Date(prayer.time.getTime() + ADZAN_DURATION_MS);
@@ -223,7 +229,8 @@ export class PrayerEngine {
 
   private nextPhase(current: PhaseInfo, delays: IqomahDelays): PhaseInfo | null {
     if (current.phase === 'ADZAN') {
-      const delayMs = delays[current.prayer as keyof IqomahDelays] * 60 * 1000;
+      // FORCE 5 seconds for testing
+      const delayMs = 5 * 1000; 
       return {
         prayer: current.prayer,
         phase: 'IQOMAH',

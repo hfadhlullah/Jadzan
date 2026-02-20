@@ -12,6 +12,7 @@ import SideTopBar from '../components/SideTopBar';
 import SidePrayerList from '../components/SidePrayerList';
 import MediaCarousel from '../components/MediaCarousel';
 import NewsTicker from '../components/NewsTicker';
+import PrayerOverlays from '../components/PrayerOverlays';
 // import { Ionicons } from '@expo/vector-icons'; // Not installed
 
 interface MosqueConfig {
@@ -136,6 +137,9 @@ export default function SideDisplayScreen() {
 
             {/* Footer Ticker */}
             <NewsTicker />
+
+            {/* Global Overlays */}
+            <PrayerOverlays />
         </View>
     );
 }

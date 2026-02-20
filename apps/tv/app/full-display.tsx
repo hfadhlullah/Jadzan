@@ -13,6 +13,7 @@ import TVBottomBar from '../components/TVBottomBar';
 // import TVBadges from '../components/TVBadges';
 import NewsTicker from '../components/NewsTicker';
 import MediaCarousel from '../components/MediaCarousel';
+import PrayerOverlays from '../components/PrayerOverlays';
 
 interface MosqueConfig {
     latitude: number;
@@ -135,6 +136,8 @@ export default function FullDisplayScreen() {
 
                 <NewsTicker />
             </View>
+
+            <PrayerOverlays />
         </View>
     );
 }

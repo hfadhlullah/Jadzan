@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Animated, Platform, Image, TouchableOpacity } from 'react-native';
+import { Audio } from 'expo-av';
 import { usePrayerStore } from '../store/prayerStore';
 import { Colors, FontSize, FontFamily } from '../constants/theme';
 
@@ -10,6 +11,7 @@ function formatCountdown(seconds: number): string {
     const s = seconds % 60;
     return `${pad(m)}:${pad(s)}`;
 }
+
 
 // ─── Approaching Warning ──────────────────────────────────────
 function ApproachingOverlay({
@@ -38,7 +40,7 @@ function ApproachingOverlay({
                 <Text style={approaching.emoji}>🔔</Text>
             </Animated.View>
             <Text style={approaching.text}>
-                {prayerLabel} in{' '}
+                Menuju {prayerLabel}{' '}
                 <Text style={{ color: Colors.accent }}>{formatCountdown(countdown)}</Text>
             </Text>
         </View>
@@ -47,36 +49,38 @@ function ApproachingOverlay({
 
 // ─── Adzan Full-Screen ────────────────────────────────────────
 function AdzanOverlay({ prayerLabel, prayerLabelAr }: { prayerLabel: string; prayerLabelAr: string }) {
-    const glow = useRef(new Animated.Value(0)).current;
+    const pulse = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
         const anim = Animated.loop(
             Animated.sequence([
-                Animated.timing(glow, { toValue: 1, duration: 1200, useNativeDriver: false }),
-                Animated.timing(glow, { toValue: 0, duration: 1200, useNativeDriver: false }),
+                Animated.timing(pulse, { toValue: 1.05, duration: 1000, useNativeDriver: Platform.OS !== 'web' }),
+                Animated.timing(pulse, { toValue: 1, duration: 1000, useNativeDriver: Platform.OS !== 'web' }),
             ])
         );
         anim.start();
         return () => anim.stop();
-    }, [glow]);
-
-    const borderColor = glow.interpolate({
-        inputRange: [0, 1],
-        outputRange: [Colors.primary, Colors.accent],
-    });
+    }, [pulse]);
 
     return (
         <View style={adzan.container}>
-            <Animated.View style={[adzan.card, { borderColor }]}>
-                <Text style={adzan.arabic}>اَلسَّلَامُ عَلَيْكُمْ</Text>
-                <Text style={adzan.title}>Adzan</Text>
+            <Text style={adzan.title}>Adzan</Text>
+
+            <Animated.View style={{ transform: [{ scale: pulse }], alignItems: 'center' }}>
                 <Text style={adzan.prayer}>{prayerLabel}</Text>
                 <Text style={adzan.prayerAr}>{prayerLabelAr}</Text>
-                <Text style={adzan.sub}>Prayer time has begun</Text>
             </Animated.View>
+
+            <Text style={adzan.sub}>Waktu shalat telah tiba</Text>
         </View>
     );
 }
+
+// ─── Iqomah Countdown ────────────────────────────────────────
+// ─── Sound Resources ──────────────────────────────────────────
+// Using short, reliable beep sounds
+const BEEP_URI = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+const FINAL_URI = 'https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg';
 
 // ─── Iqomah Countdown ────────────────────────────────────────
 function IqomahOverlay({
@@ -89,14 +93,60 @@ function IqomahOverlay({
     const isUrgent = countdown <= 60;
     const color = countdown > 300 ? Colors.primary : countdown > 60 ? Colors.accent : Colors.danger;
 
+    const beepSound = useRef<Audio.Sound | null>(null);
+    const finalSound = useRef<Audio.Sound | null>(null);
+    const lastPlayed = useRef<number | null>(null);
+
+    // Initialize sounds
+    useEffect(() => {
+        async function loadSounds() {
+            try {
+                const { sound: beep } = await Audio.Sound.createAsync({ uri: BEEP_URI });
+                beepSound.current = beep;
+
+                const { sound: final } = await Audio.Sound.createAsync({ uri: FINAL_URI });
+                finalSound.current = final;
+            } catch (error) {
+                console.warn("Failed to load sounds", error);
+            }
+        }
+
+        loadSounds();
+
+        return () => {
+            beepSound.current?.unloadAsync();
+            finalSound.current?.unloadAsync();
+        };
+    }, []);
+
+    // Play sounds logic
+    useEffect(() => {
+        const play = async (sound: Audio.Sound | null) => {
+            if (!sound || lastPlayed.current === countdown) return;
+            try {
+                lastPlayed.current = countdown;
+                await sound.replayAsync();
+            } catch (err: any) {
+                // Ignore errors
+                console.warn("Audio play error", err);
+            }
+        };
+
+        if (countdown > 0 && countdown <= 5) {
+            play(beepSound.current);
+        } else if (countdown === 0) {
+            play(finalSound.current);
+        }
+    }, [countdown]);
+
     return (
         <View style={iqomah.container}>
-            <Text style={iqomah.label}>Iqomah for {prayerLabel}</Text>
+            <Text style={iqomah.label}>Iqomah {prayerLabel}</Text>
             <Text style={[iqomah.timer, { color }]}>
                 {formatCountdown(countdown)}
             </Text>
             <Text style={iqomah.sub}>
-                {isUrgent ? '⚠ Please complete your wudu' : 'Prepare for prayer'}
+                {isUrgent ? '⚠ Harap segera berwudhu' : 'Bersiap untuk shalat'}
             </Text>
         </View>
     );
@@ -106,9 +156,14 @@ function IqomahOverlay({
 function PrayerOverlay({ prayerLabel }: { prayerLabel: string }) {
     return (
         <View style={prayer.container}>
-            <Text style={prayer.emoji}>🤲</Text>
-            <Text style={prayer.title}>Prayer Time</Text>
-            <Text style={prayer.sub}>{prayerLabel} · Silence please</Text>
+            <Image
+                source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC51TgieKu6GyK9K1DTB21-J0ZsSqHDkIeOkebmvnOSphOufWQG-p75CzCzbNv42S2954DewNiHGu8xr0fFNirgscuZgoQjyH5lfXTw4EPkj5G54-b3ki0Y42SK2kszzPSXdxSPaxImmgSUud0s0SopMudy8kR7mImym5eOx3Kkc45oQZCpvcluxguLwJahU6wRu1niF6AR6hfwSmViCOQ1QRy9CgT9o6565AEgzNzOMPCNQJ31syhOPPnwzd8FZ6JJpSrFxliuEh7w' }}
+                style={prayer.pattern}
+                resizeMode="repeat"
+            />
+            <Text style={prayer.arabic}>استووا واعتدلوا</Text>
+            <Text style={prayer.title}>SHOLAT SEDANG BERLANGSUNG</Text>
+            <Text style={prayer.sub}>{prayerLabel} · Harap tenang & matikan ponsel</Text>
         </View>
     );
 }
@@ -139,6 +194,24 @@ export default function PrayerOverlays() {
 
 // ── Styles ────────────────────────────────────────────────────
 
+const styles = StyleSheet.create({
+    audioHint: {
+        position: 'absolute',
+        bottom: 40,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    audioHintText: {
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontFamily: FontFamily.montserratSemiBold,
+    },
+});
+
 const approaching = StyleSheet.create({
     banner: {
         position: 'absolute',
@@ -159,100 +232,106 @@ const approaching = StyleSheet.create({
     text: {
         color: Colors.textPrimary,
         fontSize: 20,
-        fontFamily: FontFamily.interMedium,
+        fontFamily: FontFamily.montserratSemiBold,
     },
 });
 
 const adzan = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(15,23,42,0.95)',
+        backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 60,
         zIndex: 200,
     },
-    card: {
-        alignItems: 'center',
-        gap: 16,
-        borderWidth: 2,
-        borderRadius: 24,
-        paddingHorizontal: 80,
-        paddingVertical: 60,
-        backgroundColor: Colors.surface,
-    },
-    arabic: {
-        color: Colors.accent,
-        fontSize: 36,
-        fontFamily: FontFamily.amiriBold,
-    },
     title: {
-        color: Colors.textSecondary,
-        fontSize: 24,
-        fontFamily: FontFamily.inter,
+        color: Colors.accent,
+        fontSize: 64,
+        fontFamily: FontFamily.montserratBold,
         textTransform: 'uppercase',
-        letterSpacing: 6,
+        letterSpacing: 24,
     },
     prayer: {
-        color: Colors.textPrimary,
-        fontSize: FontSize.h1,
-        fontFamily: FontFamily.interBold,
+        color: '#FFFFFF',
+        fontSize: 280,
+        fontFamily: FontFamily.amiriBold,
+        textAlign: 'center',
+        lineHeight: 300,
     },
     prayerAr: {
-        color: Colors.textSecondary,
-        fontSize: 36,
-        fontFamily: FontFamily.amiriBold,
+        color: Colors.accent,
+        fontSize: 180,
+        fontFamily: FontFamily.amiri,
+        marginTop: 20,
     },
     sub: {
         color: Colors.textSecondary,
-        fontSize: 20,
-        fontFamily: FontFamily.inter,
+        fontSize: 60,
+        fontFamily: FontFamily.montserratSemiBold,
     },
 });
 
 const iqomah = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(15,23,42,0.92)',
+        backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 16,
+        gap: 40,
         zIndex: 200,
     },
     label: {
         color: Colors.textSecondary,
-        fontSize: 24,
-        fontFamily: FontFamily.inter,
+        fontSize: 64,
+        fontFamily: FontFamily.montserratBold,
+        textTransform: 'uppercase',
+        letterSpacing: 6,
     },
     timer: {
-        fontSize: FontSize.displayXL,
-        fontFamily: FontFamily.interBold,
-        letterSpacing: 8,
+        fontSize: 450,
+        fontFamily: FontFamily.montserratBold,
+        letterSpacing: 16,
+        lineHeight: 480,
     },
     sub: {
         color: Colors.textSecondary,
-        fontSize: 20,
-        fontFamily: FontFamily.inter,
+        fontSize: 60,
+        fontFamily: FontFamily.montserratSemiBold,
     },
 });
 
 const prayer = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(5,150,105,0.12)',
+        backgroundColor: '#020617',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 16,
+        gap: 60,
         zIndex: 200,
     },
-    emoji: { fontSize: 64 },
-    title: {
+    pattern: {
+        ...StyleSheet.absoluteFillObject,
+        opacity: 0.1,
+        tintColor: Colors.primary,
+    },
+    arabic: {
         color: Colors.primary,
-        fontSize: FontSize.h1,
-        fontFamily: FontFamily.interBold,
+        fontSize: 140,
+        fontFamily: FontFamily.amiri,
+        marginBottom: 20,
+    },
+    title: {
+        color: '#FFFFFF',
+        fontSize: 140,
+        fontFamily: FontFamily.montserratBold,
+        textTransform: 'uppercase',
+        textAlign: 'center',
+        letterSpacing: 16,
     },
     sub: {
         color: Colors.textSecondary,
-        fontSize: 24,
-        fontFamily: FontFamily.inter,
+        fontSize: 72,
+        fontFamily: FontFamily.montserratSemiBold,
     },
 });
