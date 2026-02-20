@@ -17,9 +17,18 @@
         "backgroundColor": "#0F172A"
       },
       "isTV": true,
+      "banner": "./assets/adaptive-icon.png",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
+      ],
+      "intentFilters": [
+        {
+          "action": "MAIN",
+          "category": [
+            "LEANBACK_LAUNCHER"
+          ]
+        }
       ]
     },
     "plugins": [
