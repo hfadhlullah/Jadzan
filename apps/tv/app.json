@@ -6,11 +6,14 @@
     "orientation": "landscape",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0F172A",
-    "platforms": ["android", "web"],
+    "platforms": [
+      "android",
+      "web"
+    ],
     "android": {
       "package": "com.jadzan.tv",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0F172A"
       },
       "isTV": true,
@@ -31,7 +34,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "your-eas-project-id"
+        "projectId": "8d970944-44b7-4089-9986-c2f98637f4d6"
       }
     }
   }
