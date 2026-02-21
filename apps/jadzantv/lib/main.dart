@@ -1,121 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'constants/app_theme.dart';
+import 'services/supabase_client.dart';
+import 'providers/device_provider.dart';
+import 'providers/prayer_provider.dart';
+import 'screens/pairing_screen.dart';
+import 'screens/full_display_screen.dart';
+import 'screens/side_display_screen.dart';
+import 'screens/display_screen.dart';
+
+/// Entry point for the Jadzan TV Flutter app.
+/// Mirrors app/index.tsx + app/_layout.tsx from the React Native version.
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Force landscape orientation (Android TV)
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  // Hide system UI (status bar, nav bar)
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  // Load environment variables
+  await dotenv.load(fileName: '.env');
+
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
+
+  runApp(const JadzanApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class JadzanApp extends StatelessWidget {
+  const JadzanApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => DeviceProvider()),
+        ChangeNotifierProvider(create: (_) => PrayerProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Jadzan TV',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.background,
+          fontFamily: AppFontFamily.inter,
+          colorScheme: ColorScheme.dark(
+            primary: AppColors.primary,
+            surface: AppColors.surface,
+          ),
+        ),
+        home: const _InitScreen(),
+        routes: {
+          '/pairing': (_) => const PairingScreen(),
+          '/full-display': (_) => const FullDisplayScreen(),
+          '/side-display': (_) => const SideDisplayScreen(),
+          '/display': (_) => const DisplayScreen(),
+        },
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+/// Initial loading screen that checks device state and routes accordingly.
+/// Mirrors app/index.tsx from the React Native version.
+class _InitScreen extends StatefulWidget {
+  const _InitScreen();
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<_InitScreen> createState() => _InitScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _InitScreenState extends State<_InitScreen> {
+  bool _fontError = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      // Load device state from storage
+      final deviceProvider =
+          Provider.of<DeviceProvider>(context, listen: false);
+      await deviceProvider.loadFromStorage();
+
+      // Small delay to ensure layout is ready (matches RN setTimeout 100ms)
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      if (!mounted) return;
+
+      if (deviceProvider.isConfigured) {
+        Navigator.of(context).pushReplacementNamed('/full-display');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/pairing');
+      }
+    } catch (e) {
+      debugPrint('[main] init error: $e');
+      setState(() => _fontError = true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    if (_fontError) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(
+          child: Text(
+            'Initialization Error',
+            style: TextStyle(color: AppColors.danger),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+      backgroundColor: AppColors.background,
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(color: AppColors.primary),
+            SizedBox(height: 20),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Initializing Jadzan...',
+              style: TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
