@@ -1,4 +1,4 @@
-# Jadzan — Monorepo
+# JadzanTV Admin — Monorepo
 
 ## Project Structure
 ```
